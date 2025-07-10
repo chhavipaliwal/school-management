@@ -10,8 +10,8 @@ dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI;
 connectDB();
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // optional, for form data
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", auth);
