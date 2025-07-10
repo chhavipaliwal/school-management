@@ -4,7 +4,8 @@ const User = require("../models/User");
 
 // Register
 exports.register = async (req, res) => {
-  //const { email, password, role } = req.body;
+  const { email, password, role, phoneNumber } = req.body;
+  console.log("Registering user:", { email, role });
 
   try {
     const existingUser = await User.findOne({ email });
@@ -16,6 +17,7 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      phoneNumber,
     });
 
     res
@@ -48,7 +50,7 @@ exports.login = async (req, res) => {
         role: existingUser.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "30d" }
     );
 
     res.status(200).json({
