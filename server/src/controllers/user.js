@@ -11,6 +11,7 @@ const createUser = async (req, res) => {
       .json({ message: "Error creating user", error: error.message });
   }
 };
+
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -21,6 +22,7 @@ const getAllUsers = async (req, res) => {
       .json({ message: "Error fetching users", error: error.message });
   }
 };
+
 //private
 const getPrivateUsers = async (req, res) => {
   try {

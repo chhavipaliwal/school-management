@@ -1,24 +1,45 @@
 const jwt = require("jsonwebtoken");
 
-const login = async (req, res) => {
-  const { email, password } = req.body;
-  console.log("Login attempt:", { email, password });
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+// register function
+const register = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required" });
+    }
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRATION || "1h",
+    });
+
+    res.status(201).json({ message: "User registered successfully", token });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error registering user", error: error.message });
   }
+};
+// login function
+const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required" });
+    }
+    // In a real application, you would verify the username and password against a database
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRATION || "1h",
+    });
 
-  const user = {
-    name: "chhavi",
-    email,
-    phone: "234567890",
-    role: "student",
-  };
-
-  const token = jwt.sign(user, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRATION,
-  });
-
-  res.json({ token });
+    res.status(200).json({ message: "User logged in successfully", token });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error logging in user", error: error.message });
+  }
 };
 
-module.exports = { login };
+module.exports = { login, register };
